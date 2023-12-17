@@ -1,6 +1,12 @@
 from rest_framework import serializers
 from .models import House, Announcement, Work, Car, Other
 from django.utils import timezone
+from .representation import (
+    WorkSerializer,
+    HouseSerializer,
+    CarSerializer,
+    OtherSerializer,
+)
 
 
 class HouseSerializer(serializers.ModelSerializer):
@@ -24,7 +30,42 @@ class WorkSerializer(serializers.ModelSerializer):
 class AnnouncementSerializer(serializers.ModelSerializer):
     class Meta:
         model = Announcement
-        fields = ["title", "description", "price", "image", "created", "type", "town"]
+        fields = [
+            "id",
+            "title",
+            "price",
+            "image",
+            "created",
+            "type",
+            "town",
+        ]
+
+
+class RetrievehouseSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Announcement
+        fields = AnnouncementSerializer.Meta.fields
+
+    def to_representation(self, instance):
+        inst = super().to_representation(instance)
+
+        if instance.type == "house":
+            current_house = House.objects.get(announcement=instance.id)
+            inst["specific"] = HouseSerializer(instance=current_house, many=False).data
+
+        elif instance.type == "work":
+            current_work = Work.objects.get(announcement=instance.id)
+            inst["specific"] = WorkSerializer(instance=current_work, many=False).data
+
+        elif instance.type == "car":
+            current_car = Car.objects.get(announcement=instance.id)
+            inst["specific"] = CarSerializer(instance=current_car, many=False).data
+
+        elif instance.type == "other":
+            current_other = Other.objects.get(announcement=instance.id)
+            inst["specific"] = OtherSerializer(instance=current_other, many=False).data
+
+        return inst
 
 
 class CreateHouseSerializer(AnnouncementSerializer):
@@ -55,8 +96,8 @@ class CreateWorkSerializer(AnnouncementSerializer):
         fields = AnnouncementSerializer.Meta.fields + ["calary", "type_of_work"]
 
     def create(self, validated_data):
-        calary = validated_data.get("calary", None)
-        type_of_work = validated_data.get("type_of_work", None)
+        calary = validated_data.pop("calary", None)
+        type_of_work = validated_data.pop("type_of_work", None)
 
         ann = Announcement.objects.create(**validated_data)
 
@@ -92,8 +133,6 @@ class CreateCarSerializer(AnnouncementSerializer):
         }
 
         ann = Announcement.objects.create(**validated_data)
-
-        print("I'm here")
 
         Car.objects.create(announcement=ann, **data).save()
 

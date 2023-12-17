@@ -27,7 +27,7 @@ class House(models.Model):
 
     area = models.FloatField()
 
-    announcement = models.ForeignKey(
+    announcement = models.OneToOneField(
         Announcement,
         on_delete=models.PROTECT,
         related_name="house",
@@ -41,7 +41,7 @@ class Work(models.Model):
     calary = models.DecimalField(max_digits=6, decimal_places=0)
     type_of_work = models.CharField(choices=TYPE_WORK, max_length=10)
 
-    announcement = models.ForeignKey(
+    announcement = models.OneToOneField(
         Announcement,
         on_delete=models.PROTECT,
         related_name="work",
@@ -64,7 +64,7 @@ class Car(models.Model):
 
     status = models.CharField(choices=STATUS_CHOICE, max_length=10)
 
-    announcement = models.ForeignKey(
+    announcement = models.OneToOneField(
         Announcement,
         on_delete=models.PROTECT,
         related_name="car",
@@ -73,7 +73,7 @@ class Car(models.Model):
 
 
 class Other(models.Model):
-    announcement = models.ForeignKey(
+    announcement = models.OneToOneField(
         Announcement,
         on_delete=models.PROTECT,
         related_name="other",
