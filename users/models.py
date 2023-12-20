@@ -1,6 +1,5 @@
 from django.db import models
 from django.contrib.auth.models import PermissionsMixin, AbstractBaseUser
-from enum import Enum, auto
 from .validators import validate_phone_number
 from .managers import CustomUserManager
 
@@ -10,9 +9,9 @@ class User(PermissionsMixin, AbstractBaseUser):
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
 
-    is_active = models.BooleanField()
+    is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
-    is_superuser = models.BooleanField()
+    is_superuser = models.BooleanField(default=False)
 
     join_at = models.DateTimeField(auto_now_add=True)
 
