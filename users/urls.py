@@ -8,7 +8,13 @@ router = SimpleRouter()
 router.register("users", views.UserViewSet)
 
 
-urlpatterns = []
+urlpatterns = [
+    path(
+        "change-password/<str:token>/",
+        views.UserViewSet.as_view({"post": "change_password"}),
+        name="users-change-password",
+    ),
+]
 
 
 urlpatterns += router.urls
