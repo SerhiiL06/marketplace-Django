@@ -5,7 +5,7 @@ from rest_framework.routers import SimpleRouter
 router = SimpleRouter()
 
 
-router.register("test", views.HouseViewSet)
+router.register("adv", views.HouseViewSet)
 
 
 urlpatterns = []

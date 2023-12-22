@@ -1,0 +1,147 @@
+openapi: "3.0.0"
+info:
+  title: mysite
+  description: the marketplace site
+  version: "0.0.1"
+components: {}
+paths:
+  /users/register:
+    post:
+      tags:
+        - users
+      requestBody:
+        content:
+          application/json:
+            schema:
+              required:
+                - email
+                - password1
+                - password2
+              properties:
+                email:
+                  type: string
+                  example: example@gmail.com
+                password1:
+                  type: string
+                password2:
+                  type: string
+      responses:
+        "200":
+          description: user created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  email:
+                    type: string
+        "400":
+          description: incorrect data
+  /users/forgot-password/:
+    post:
+      tags:
+        - users
+      requestBody:
+        content:
+          application/json:
+            schema:
+              required:
+                - email
+              properties:
+                email:
+                  type: string
+      responses:
+        "200":
+          description: email was sent
+        "404":
+          description: user with this email doesn't exists
+
+  /users/change-password/{token}:
+    post:
+      tags:
+        - users
+      parameters:
+        - name: token
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: password was change
+  /adv/:
+    get:
+      tags:
+        - adv
+      parameters:
+        - name: min_price
+          in: query
+          required: false
+          description: the minimal price of product
+          example: 20
+          schema:
+            type: number
+        - name: town
+          in: query
+          required: false
+          description: filter by town
+          example: Kyiv
+          schema:
+            type: number
+      responses:
+        "200":
+          description: list of advertisement
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  properties:
+                    id:
+                      type: number
+                      example: 2
+                    title:
+                      type: string
+                      example: the apple
+                    image:
+                      type: string
+                      example: the image of goods
+                    price:
+                      type: number
+                      example: 10.4
+                    type:
+                      type: string
+                      example: house
+                    town:
+                      type: string
+                      example: Kyiv
+    post:
+      tags:
+        - adv
+      requestBody:
+        content:
+          application/json:
+            schema:
+              required:
+                - title
+                - price
+                - type
+              properties:
+                title:
+                  type: string
+                  example: apple
+                image:
+                  type: string
+                  example: the image of goods
+                price:
+                  type: number
+                  example: 10.4
+                type:
+                  type: string
+                  example: house
+                town:
+                  type: string
+                  example: Kyiv
+      responses:
+        "200":
+          description: object was create
